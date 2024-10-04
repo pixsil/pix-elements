@@ -1,0 +1,24 @@
+{
+    "name": "pix-elements",
+    "version": "1.0.0",
+    "description": "Reusable Vue components for Laravel",
+    "main": "src/index.js",
+    "scripts": {
+        "build": "webpack",
+        "test": "jest"
+    },
+    "keywords": [
+        "laravel",
+        "vue",
+        "components"
+    ],
+    "author": "Your Name",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/pixsil/bootstrap-pix-elements.git"
+    },
+    "dependencies": {
+        "pix-elements": "^1.0.0"
+    }
+}
