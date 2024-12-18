@@ -18,6 +18,20 @@ To install the package, use the following command:
 npm install pix-elements
 ```
 
+## Usage
+
+In vue:
+
+```bash
+    import {PixButton} from "pix-elements";
+```
+
+```bash
+    components: {
+        PixButton,
+    },
+```
+
 ## License
 
 This package is open-source and available under the MIT License.
