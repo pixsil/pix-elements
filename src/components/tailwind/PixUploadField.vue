@@ -15,7 +15,7 @@
     <img id="blah" src="#" alt="your image" />
 </template>
 <script>
-import PixButton from '@/Components/PixButton.vue';
+import PixButton from './PixButton.vue';
 import { useForm } from '@inertiajs/vue3'
 
 export default {
