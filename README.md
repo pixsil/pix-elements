@@ -35,7 +35,7 @@ In vue:
 
 ### Pix data table override cells and columns:
 
-```vuejs
+```js
 <pix-data-table-card @onSearch="onSearch" :items="product_templates" :fields="table_fields" @on-pagination-change="onPaginationChange" @enter-on-search-input="onEnterOnSearch">
     <template #head(buttons)="data">
         <div class="float-right">
