@@ -33,7 +33,32 @@ In vue:
 ```
 
 
-### Pix data table override cells and columns:
+### Pix data table
+
+*Insert data*
+
+You can create an array with all the data you have. You can use keys deeper in the array like the second example.
+
+Use can set custom td and th classes with tdClass and thClass.
+
+table_fields: [
+    {
+        key: 'article_number',
+        label: 'Artikelnummer',
+    },
+    {
+        key: 'product_type.name',
+        label: 'Type\n',
+    },
+    {
+        key: 'buttons',
+        tdClass: 'fit',
+        thClass: 'fit',
+    },
+],
+
+
+*Custom th and td*
 
 ```html
 <pix-data-table-card @onSearch="onSearch" :items="product_templates" :fields="table_fields" @on-pagination-change="onPaginationChange" @enter-on-search-input="onEnterOnSearch">
