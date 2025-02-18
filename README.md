@@ -81,6 +81,16 @@ table_fields: [
 
 Here is "buttons" the field name. This can be used for the cells and the header of the table
 
+### Helpers
+
+You can use them like this:
+
+```php
+import { euro, euroThousandPoint, onlyThousandPoint } from './formatters.js';
+
+```
+
 ## License
 
 This package is open-source and available under the MIT License.
+
