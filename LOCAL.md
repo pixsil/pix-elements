@@ -35,4 +35,6 @@ npm publish
 ```
 npm unlink pix-elements
 npm install pix-elements@latest
+
+vite build
 ```
