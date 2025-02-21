@@ -1,6 +1,6 @@
 {
     "name": "pix-elements",
-    "version": "1.10.0",
+    "version": "1.11.0",
     "description": "Reusable Vue components for Laravel",
     "main": "src/index.js",
     "scripts": {
