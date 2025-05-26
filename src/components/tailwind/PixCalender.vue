@@ -26,6 +26,7 @@ export default {
 
     props: {
         modelValue: String,
+        cropValue: Object,
         disabled: {
             type: Boolean,
             default: false,

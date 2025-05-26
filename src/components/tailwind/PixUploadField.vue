@@ -1,59 +1,116 @@
+<!-- v2: added basic functionalitties no delete button etc -->
 <template>
-    <label class="block mb-2 text-sm font-medium text-gray-900" for="file_input">Upload file</label>
-    <input @change="previewFiles" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" id="file_input" type="file">
-    <PixButton>Upload</PixButton>
-
-    <form @submit.prevent="submit">
-        <input type="text" v-model="form.name" />
-        <input type="file" @input="form.avatar = $event.target.files[0]" />
-        <progress v-if="form.progress" :value="form.progress.percentage" max="100">
-            {{ form.progress.percentage }}%
-        </progress>
-        <button type="submit">Submit</button>
-    </form>
-
-    <img id="blah" src="#" alt="your image" />
+    <div class="max-w-md mx-auto">
+<!--        <label data-browse="Browse" class="custom-file-label" :class="[ readOnly ? 'disabled' : '' ]" @click="handleClick">-->
+<!--            <span v-if="!has_file" class="d-block" style="pointer-events: none;">No file chosen</span>-->
+<!--            <span v-else-if="has_file && !is_uploaded_file" class="d-block" style="pointer-events: none;">File selected for upload</span>-->
+<!--            <span v-else class="d-block" style="pointer-events: none;">File uploaded</span>-->
+<!--        </label>-->
+        <input type="file"
+               v-bind="$attrs"
+               :model-value="modelValueDate"
+               @change:model-value="changeValue($event)"
+               :disabled="disabled"
+               class="w-full border border-gray-300 text-slate-500 font-medium text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-slate-500 rounded"
+        />
+    </div>
 </template>
+
+
 <script>
-import PixButton from './PixButton.vue';
-import { useForm } from '@inertiajs/vue3'
+import Datepicker from "@vuepic/vue-datepicker";
 
 export default {
-    name: 'PixUploadField',
-
-    components: {
-        PixButton
+    props: {
+        modelValue: String,
+        readOnly: {
+            type: Boolean,
+            default: null,
+        },
     },
 
-    emits: ['changebackground'],
+    emits: [
+        'update:modelValue',
+    ],
+
+
+    components: {Datepicker},
 
     data() {
-        return {
-            form: useForm({
-                name: null,
-                avatar: null,
-            }),
-            tempfileurl: null,
-        }
+        return {}
     },
 
     methods: {
-        submit() {
-            this.form.post('/users')
+        // handleClick() {
+        //     if (this.readOnly) {
+        //         return;
+        //     }
+        //     this.$refs.file.click()
+        // },
+        // selectedFile(event) {
+        //
+        //     let file = event.target.files[0];
+        //
+        //     var file_object = {
+        //         'file': file,
+        //         'delete': false,
+        //     }
+        //
+        //     this.$emit('update:modelValue', file_object)
+        // },
+        changeValue(event) {
+            console.log(333);
+            this.$emit('update:modelValue', this.formatToStore(event));
         },
-        previewFiles(event) {
-            const [file] = event.target.files
-            if (file) {
-                let tempfileurl = URL.createObjectURL(file)
-                this.$emit('changebackground',  tempfileurl )
-            }
-        },
-        changeInput() {
-            console.log(33);
-            let email = 'efef';
-            let password = 'efef';
-            his.$emit('submit', { email, password })
-        }
     },
+
+    mounted() {
+
+    },
+
+    created() {
+        // Event.('event', () => {});
+    },
+
+
+    computed: {
+        has_file() {
+            return this.modelValue?.file ? true : false;
+        },
+        is_uploaded_file() {
+            // guard false
+            if (!this.modelValue.file) {
+                return false;
+            }
+            //
+            if (typeof this.modelValue.file !== 'string') {
+                return false;
+            }
+
+            return true;
+        },
+        modelValueDate() {
+            if (this.modelValue === null) {
+                return null;
+            }
+            return new Date(this.modelValue)
+        },
+}
 }
 </script>
+
+<style scoped>
+.disabled {
+    background-color: #e9ecef;
+}
+.inputx {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    border-color: #6b7280;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+}
+</style>

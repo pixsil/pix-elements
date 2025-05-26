@@ -13,6 +13,12 @@ Link
 npm link pix-elements
 ```
 
+If you want to see changes in the files. Add to tailwind config:
+
+```
+./node_modules/pix-elements/src/components/**/*.vue
+```
+
 Unlink
 ```
 npm unlink pix-elements
