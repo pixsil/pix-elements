@@ -18,6 +18,9 @@
 
 <script>
 export default {
+
+    inject: ['eventBus'],
+
     props: {},
 
     components: {},
@@ -26,7 +29,11 @@ export default {
         return {}
     },
 
-    methods: {},
+    methods: {
+        closeModal() {
+            this.eventBus.emit('modal-close');
+        },
+    },
 
     mounted() {
     },

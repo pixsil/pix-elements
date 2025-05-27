@@ -5,10 +5,11 @@ import PixUploadImageField from './PixUploadImageField.vue';
 import PixInputCopy from './PixInputCopy.vue';
 import PixValidate from './PixValidate.vue';
 import PixModalTrigger from './PixModalTrigger.vue';
-import PixBaseModal from './PixBaseModal.vue';
+import PixModalBase from './PixModalBase.vue';
 import PixModalHeader from './PixModalHeader.vue';
 import PixModalBody from './PixModalBody.vue';
 import PixModalFooter from './PixModalFooter.vue';
+import PixModalInjector from './PixModalInjector.vue';
 
 // Export Tailwind components
 export {
@@ -18,8 +19,9 @@ export {
     PixValidate,
     PixUploadImageField,
     PixModalTrigger,
-    PixBaseModal,
+    PixModalBase,
     PixModalHeader,
     PixModalBody,
     PixModalFooter,
+    PixModalInjector,
 };

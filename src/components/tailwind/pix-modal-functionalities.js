@@ -26,11 +26,4 @@ export default {
     mounted() {
         // this.$emit('set-size', 'xl')
     },
-
-    // created() {
-    //     this.eventBus.on('close-modal', () => {
-    //         console.log(3333);
-    //         // this.closeModal();
-    //     });
-    // }
 }
