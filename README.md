@@ -81,6 +81,20 @@ table_fields: [
 
 Here is "buttons" the field name. This can be used for the cells and the header of the table
 
+### Pix modal
+
+For the modal, you need to add the <PixModalInjector> somewhere in your code — for example, all the way at the bottom of your application template. This injector is used for all the modals. The placement does not matter.
+
+Somewhere in the code where you want to trigger a modal component, you can use the <PixModalTrigger>. Inside it, you can add a link or a button. You need to add the parameter component="The imported component".
+
+The imported component will be sent to the modal injector and rendered there. You can pass attributes to the <PixModalTrigger>, and they will be sent to your modal component — just define them as props. It is even possible to use v-model.
+
+#### Requirements
+The modal uses an eventBus that is provided via injection. Make sure you have this installed.
+
+
+
+
 ### Helpers
 
 You can use them like this:
