@@ -1,6 +1,6 @@
 <!-- v2: added basic functionalitties no delete button etc -->
 <template>
-    <div class="max-w-md mx-auto">
+    <div class="">
 <!--        <label data-browse="Browse" class="custom-file-label" :class="[ readOnly ? 'disabled' : '' ]" @click="handleClick">-->
 <!--            <span v-if="!has_file" class="d-block" style="pointer-events: none;">No file chosen</span>-->
 <!--            <span v-else-if="has_file && !is_uploaded_file" class="d-block" style="pointer-events: none;">File selected for upload</span>-->
@@ -8,33 +8,28 @@
 <!--        </label>-->
         <input type="file"
                v-bind="$attrs"
-               :model-value="modelValueDate"
-               @change:model-value="changeValue($event)"
+               @change="onSelectedFile"
                :disabled="disabled"
-               class="w-full border border-gray-300 text-slate-500 font-medium text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-slate-500 rounded"
+               :class="[ disabled ? 'bg-gray-200 cursor-not-allowed file:cursor-not-allowed' : 'file:cursor-pointer cursor-pointer file:hover:bg-gray-200' ]"
+               class="w-full border border-gray-300 text-slate-500 font-medium text-sm bg-white border file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:text-slate-500 rounded"
         />
     </div>
 </template>
 
 
 <script>
-import Datepicker from "@vuepic/vue-datepicker";
-
 export default {
     props: {
-        modelValue: String,
-        readOnly: {
+        modelValue: [File, String, null],
+        disabled: {
             type: Boolean,
-            default: null,
+            default: false,
         },
     },
 
     emits: [
         'update:modelValue',
     ],
-
-
-    components: {Datepicker},
 
     data() {
         return {}
@@ -47,21 +42,19 @@ export default {
         //     }
         //     this.$refs.file.click()
         // },
-        // selectedFile(event) {
-        //
-        //     let file = event.target.files[0];
-        //
-        //     var file_object = {
-        //         'file': file,
-        //         'delete': false,
-        //     }
-        //
-        //     this.$emit('update:modelValue', file_object)
-        // },
-        changeValue(event) {
-            console.log(333);
-            this.$emit('update:modelValue', this.formatToStore(event));
+        onSelectedFile(event) {
+            let file = event.target.files[0];
+
+            // var file_object = {
+            //     'file': file,
+            //     'delete': false,
+            // }
+
+            this.$emit('update:modelValue', file)
         },
+        // changeValue(event) {
+        //     this.$emit('update:modelValue', event);
+        // },
     },
 
     mounted() {

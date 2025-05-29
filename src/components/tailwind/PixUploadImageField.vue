@@ -2,7 +2,7 @@
     <div>
         <div class="form-group">
             <div class="">
-                <div class="  font-weight-bold">
+                <div class="font-weight-bold">
 <!--                    <label class="col-form-label" :for="field.column_name">{{ field.label }}</label>-->
                 </div>
             </div>
@@ -13,34 +13,12 @@
                         <div class=" mb-3">
 
                             <div class="input-group">
-                                <div class="custom-file input-overflow">
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        class="custom-file-input cursor-pointer"
-                                        ref="upload_field"
-
-                                        @change="onFileSelect"
-                                        required>
-                                    <!--                                        :value="modelValue"-->
-                                    <label v-if="typeof modelValue === 'object' && modelValue !== null"
-                                           class="custom-file-label"
-                                           for="porjectImageField"
-                                           v-text="modelValue.name">
-                                    </label>
-                                    <label v-else-if="typeof modelValue === 'string'"
-                                           class="custom-file-label"
-                                           for="porjectImageField"
-                                           v-text="modelValue">
-                                    </label>
-                                    <label v-else class="custom-file-label" for="porjectImageField">Choose file</label>
-                                </div>
-                                <div v-if="modelValue" class="input-group-append cursor-pointer">
-                                <span class="input-group-text" id="" @click="deleteFile()">
-                                    <i v-if="modelValue" class="fa fa-sm fa-trash"></i>
-                                    <i v-else class="fa fa-sm fa-trash"></i>
-                                </span>
-                                </div>
+                                <PixUploadField
+                                    accept="image/*"
+                                    :disabled="upload_disabled"
+                                    :modelValue="modelValue"
+                                    @update:modelValue="onFileSelect"
+                                ></PixUploadField>
                             </div>
 
                         </div>
@@ -53,15 +31,15 @@
 <!--                            </b-overlay>-->
                         </div>
                         <!-- could not loaded -->
-                        <div class="" v-else-if="status == 'could_not_loaded'">
+                        <div class="" v-else-if="status === 'could_not_loaded'">
                             <div class="cropper_outer_div img-thumbnail img-fluid">
                                 <span class="m-2">The image could not be loaded</span>
                             </div>
                         </div>
-                        <div class="" v-else-if="status == 'loaded'">
+                        <div class="" v-else-if="status === 'loaded'">
                             <div v-if="!crop_mode">
-                                <div>
-                                    <img class="cropped_img w-full h-full" :src="cropped_image_base64" alt=""/>
+                                <div class="flex justify-center my-4">
+                                    <img class="h-[300px] w-auto object-contain" :src="cropped_image_base64" alt=""/>
 <!--                                        <b-overlay :show="loading" rounded="sm">-->
 <!--                                            <b-img class="cropped_img" thumbnail fluid :src="cropped_image_base64"></b-img>-->
 <!--                                        </b-overlay>-->
@@ -69,7 +47,7 @@
                                 <div class="">
                                     <button type="button"
                                             @click="editCrop()"
-                                            class="border font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full text-center">
+                                            class="btn btn-white">
                                         <slot name="edit-crop">Edit crop</slot>
                                     </button>
 <!--                                        <b-button-group class="w-100">-->
@@ -80,21 +58,21 @@
                             <div v-else>
                                 <div class="">
                                     <div class="">
-                                        <div class="cropper_outer_div img-thumbnail img-fluid">
+                                        <div class="my-4">
                                             <pix-overlay :show="loading" rounded="sm">
                                                 <img
                                                     v-if="original_image_base64"
                                                     ref="image"
                                                     :src="original_image_base64"
                                                     @load="onReady"
-                                                    class="img-fluid"
+                                                    class="h-[300px] w-auto"
                                                     alt=""/>
                                             </pix-overlay>
                                         </div>
                                         <div class="">
                                             <button type="button"
                                                     @click="endCrop()"
-                                                    class="border font-bold py-2 px-4 rounded bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full text-center">
+                                                    class="btn btn-white">
                                                 <slot name="edit-crop">Save crop</slot>
                                             </button>
                                         </div>
@@ -115,16 +93,20 @@
 import 'cropperjs/dist/cropper.css';
 import {PixOverlay} from "pix-elements";
 import Cropper from 'cropperjs';
+import {PixUploadField} from "./index";
 
 export default {
 
+    inject: ['eventBus'],
+
     components: {
-        PixOverlay
+        PixOverlay,
+        PixUploadField,
     },
 
     props: {
         field: Object,
-        modelValue: String,
+        modelValue: File,
         cropValue: Object,
     },
 
@@ -145,7 +127,7 @@ export default {
             cropped_image_base64: null,
             // crop_mode: false,
             coords: null,
-            crop_data_object: null,
+            // crop_data_object: null,
             mime_type: '',
             cropedImage: '',
             autoCrop: false,
@@ -153,23 +135,30 @@ export default {
             image: '',
             dialog: false,
             files: '',
-            koel: null,
             crop_mode: false,
+            upload_disabled: false,
         }
     },
 
     methods: {
+        changeValue(file) {
+            console.log(2);
+            console.log(file);
+            // this.$emit('update:modelValue', file);
+        },
         deleteFile() {
             // this.modelValue = null;
             // this.cropValue = null;
             this.status = 'empty';
         },
-        onFileSelect(e) {
+        onFileSelect(file) {
+
             // set loading
             this.status = 'loading';
             this.loading = true;
+            this.crop_mode = false;
 
-            const file = e.target.files[0];
+            this.eventBus.emit('modal-disable-close', false);
 
             this.$emit('update:modelValue', file)
             this.$emit('update:cropValue', null)
@@ -192,8 +181,6 @@ export default {
                     this.cropped_image_base64 = event.target.result
                     this.original_image_base64 = event.target.result
 
-                    console.log(this.original_image_base64);
-
                     // remove loading
                     this.loading = false;
                     this.status = 'loaded';
@@ -211,9 +198,76 @@ export default {
                 alert('Sorry, FileReader API not supported')
             }
         },
+        async onFileLoad(file) {
+          // start loading
+          this.status = 'loading';
+          this.loading = true;
+          this.crop_mode = false;
+          this.upload_disabled = false;
+
+          this.eventBus.emit('modal-disable-close', false);
+
+          this.mime_type = file.type;
+
+          if (typeof FileReader !== 'function') {
+            return alert('Sorry, FileReader API not supported');
+          }
+
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            // set both original and cropped previews to full image
+            this.original_image_base64 = e.target.result;
+            this.cropped_image_base64 = e.target.result;
+
+            // finish loading
+            this.loading = false;
+            this.status = 'loaded';
+
+            // if there's a saved crop, apply it off-screen
+            if (this.cropValue) {
+              await this.applySavedCrop();
+            }
+          };
+          reader.readAsDataURL(file);
+        },
+        applySavedCrop() {
+          return new Promise((resolve) => {
+            // create hidden image for cropping
+            const img = document.createElement('img');
+            img.style.visibility = 'hidden';
+            img.src = this.original_image_base64;
+            document.body.appendChild(img);
+
+            img.onload = () => {
+              const tempCropper = new Cropper(img, {
+                viewMode: 2,
+                ready: () => {
+                  // apply saved coordinates
+                  tempCropper.setData(this.cropValue);
+
+                  // generate cropped image if available
+                  const canvas = tempCropper.getCroppedCanvas();
+                  if (canvas) {
+                    this.cropped_image_base64 = canvas.toDataURL(this.mime_type);
+                  } else {
+                    console.warn('applySavedCrop: getCroppedCanvas returned null');
+                  }
+
+                  // clean up
+                  tempCropper.destroy();
+                  document.body.removeChild(img);
+                  resolve();
+                }
+              });
+            };
+          });
+        },
         editCrop() {
 
             this.crop_mode = true;
+            this.upload_disabled = true;
+
+            this.eventBus.emit('modal-disable-close', true);
 
             // init crop object
             // this.$emit('update:cropValue', {})
@@ -227,7 +281,7 @@ export default {
 
             // Save crop coordinates
             const crop_data = this.cropper.getData();
-            this.crop_data_object = crop_data;
+            // this.crop_data_object = crop_data;
 
             // Generate the cropped image as Base64
             const canvas = this.cropper.getCroppedCanvas();
@@ -238,6 +292,10 @@ export default {
             this.cropper = null;
 
             this.crop_mode = false;
+
+            this.eventBus.emit('modal-disable-close', false);
+
+            this.upload_disabled = false;
 
             // Exit crop mode
             this.$emit('update:cropValue', crop_data);
@@ -311,18 +369,15 @@ export default {
     },
 
     mounted() {
-
-        // set new image
+        if (this.modelValue) {
+            this.onFileLoad(this.modelValue)
+        }
     },
 
     created() {
     },
 
     computed: {
-        // crop_mode() {
-        //     // if crop object is empty return false otherwise true
-        //     return this.cropValue != null;
-        // }
     }
 
 }
